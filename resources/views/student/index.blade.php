@@ -187,9 +187,12 @@
                             </div>
                             <div class="col-md-6">
                                 <p></p>
-                            </div>
-                            <div class="col-md-12">
+                            </div>  
+                            <div class="col-md-6">
                                 <p><strong>ที่อยู่:</strong> {{ $student_infos->where('student_id', $user->student_id)->first()->emg_address ?? '-' }}</p>
+                            </div>
+                            <div class="col-md-6">
+                                <p> </p>
                             </div>
                             <div class="col-md-6">
                                 <p><strong>เบอร์โทร:</strong> {{ $student_infos->where('student_id', $user->student_id)->first()->emg_phone ?? '-' }}</p>
@@ -213,24 +216,24 @@
                 <div class="row mt-3">
                     @php
                         $locations = $locations ?? collect();
-                        $locationInfos = $location_infos ?? collect();
+                        $location_infos = $location_infos ?? collect(); // Ensure $location_infos is defined
 
-                        // Union locations and location_infos
-                        $allLocations = $locations->map(function ($location) {
+                        $filteredLocation = $locations->map(function ($location) use ($location_infos) {
+                            $matchingInfo = $location_infos->firstWhere('id', $location->id); // Match using 'id'
                             return [
-                                'loc_id' => $location->loc_id,
+                                'id' => $location->id,
                                 'name' => $location->name,
                                 'term_year' => $location->term_year,
-                                'loc_detail' => null,
-                                'loc_house_no' => null,
-                                'loc_moo' => null,
-                                'loc_soi' => null,
-                                'loc_road' => null,
-                                'loc_subdistrict' => null,
-                                'loc_district' => null,
-                                'loc_province' => null,
-                                'loc_zip_code' => null,
-                                'loc_phone_number' => null,
+                                'loc_detail' => $matchingInfo->loc_detail ?? null,
+                                'loc_house_no' => $matchingInfo->loc_house_no ?? null,
+                                'loc_moo' => $matchingInfo->loc_moo ?? null,
+                                'loc_soi' => $matchingInfo->loc_soi ?? null,
+                                'loc_road' => $matchingInfo->loc_road ?? null,
+                                'loc_subdistrict' => $matchingInfo->loc_subdistrict ?? null,
+                                'loc_district' => $matchingInfo->loc_district ?? null,
+                                'loc_province' => $matchingInfo->loc_province ?? null,
+                                'loc_zip_code' => $matchingInfo->loc_zip_code ?? null,
+                                'loc_phone_number' => $matchingInfo->loc_phone_number ?? null,
                                 'student_ids' => [
                                     $location->student_id1,
                                     $location->student_id2,
@@ -238,26 +241,7 @@
                                     $location->student_id4
                                 ]
                             ];
-                        })->merge($locationInfos->map(function ($info) {
-                            return [
-                                'loc_id' => $info->loc_id,
-                                'name' => null,
-                                'term_year' => null,
-                                'loc_detail' => $info->loc_detail, 
-                                'loc_house_no' => $info->loc_house_no,
-                                'loc_moo' => $info->loc_moo,
-                                'loc_soi' => $info->loc_soi,
-                                'loc_road' => $info->loc_road,
-                                'loc_subdistrict' => $info->loc_subdistrict,
-                                'loc_district' => $info->loc_district,
-                                'loc_province' => $info->loc_province,
-                                'loc_zip_code' => $info->loc_zip_code,
-                                'loc_phone_number' => $info->loc_phone_number,
-                                'student_ids' => []
-                            ];
-                        }));
-
-                        $filteredLocation = $allLocations->filter(function ($location) use ($user) {
+                        })->filter(function ($location) use ($user) {
                             return in_array($user->student_id, $location['student_ids']);
                         })->reduce(function ($carry, $item) {
                             return array_merge($carry, array_filter($item, fn($value) => $value !== null));
@@ -274,7 +258,7 @@
                     </div>
                     <div class="col-md-12">
                         <p><strong>ที่อยู่:</strong>
-                            @if ($filteredLocation)
+                            @if (!empty($filteredLocation))
                                 {{ $filteredLocation['loc_house_no'] ?? '-' }} หมู่
                                 {{ $filteredLocation['loc_moo'] ?? '-' }} ซอย
                                 {{ $filteredLocation['loc_soi'] ?? '-' }} ถนน

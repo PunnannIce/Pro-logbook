@@ -39,6 +39,8 @@
                 })
                 ->implode(', ') 
             : 'ไม่พบข้อมูล';
+
+        $teacherNote = \App\Models\TeacherNote::where('student_id', $studentId)->first();
     @endphp
 
     @if($student)
@@ -67,7 +69,7 @@
                                 @php
                                     $mentorName = \App\Models\User::where('id', $mentorId)->pluck('name')->first();
                                 @endphp
-                                <li class="list-group-item">{{ $mentorName ?? 'ไม่พบข้อมูล' }}</li>
+                                <li class="list-group-item text-start">{{ $mentorName ?? 'ไม่พบข้อมูล' }}</li>
                             @endforeach
                         </ul>
                     @else
@@ -78,7 +80,7 @@
             <div class="row mb-4">
                 <div class="col-md-4">
                     <label for="supervisionType" class="form-label">ประเภทของการนิเทศ</label>
-                    <input type="text" class="form-control" id="supervisionType" name="supervision_type" value="{{ $locations->type_supervision ?? 'ไม่พบข้อมูล' }}" readonly>
+                    <input type="text" class="form-control" id="supervisionType" name="supervision_type" value="{{ $teacherNote->supervision_type ?? 'ไม่พบข้อมูล' }}" readonly>
                 </div>
                 <div class="col-md-4">
                     <label for="locationName" class="form-label">ชื่อสถานที่ฝึกงาน</label>

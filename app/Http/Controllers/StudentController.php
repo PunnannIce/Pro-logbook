@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Location;
+use App\Models\LocationInfo; // Include LocationInfo model
 use App\Models\StudentInfo;
 
 use Illuminate\Http\Request;
@@ -16,8 +17,9 @@ class StudentController extends Controller
         $user = auth()->user();
         $student_infos = StudentInfo::all();
         $locations = Location::all();
+        $location_infos = LocationInfo::all(); // Fetch LocationInfo data
 
-        return view('student.index', compact('user', 'student_infos', 'locations'));
+        return view('student.index', compact('user', 'student_infos', 'locations', 'location_infos'));
     }
 
     public function uploadImage(Request $request)

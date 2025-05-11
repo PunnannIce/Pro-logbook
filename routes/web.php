@@ -7,6 +7,7 @@ use App\Http\Controllers\StudentController;
 use App\Http\Controllers\StudentLogController;
 use App\Http\Controllers\TeacherController;
 use App\Http\Controllers\MentorSignatureController;
+use App\Http\Controllers\TeacherNotesController;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 use Illuminate\Support\Facades\File;
@@ -84,4 +85,13 @@ Route::middleware(['auth'])->group(function () {
     Route::get('/teacher', [TeacherController::class, 'index'])->name('teacher.index');
 });
 
+Route::middleware(['auth', 'role:Teacher'])->group(function () {
+    Route::get('/teacher/notes', [TeacherNotesController::class, 'index'])->name('teacher.notes');
+    Route::post('/teacher/notes', [TeacherNotesController::class, 'store'])->name('teacher.notes.store');
+    Route::get('/teacher/notes/edit/{student_id}', [TeacherNotesController::class, 'edit'])->name('teacher.notes.edit');
+    Route::put('/teacher/notes/update/{student_id}', [TeacherNotesController::class, 'update'])->name('teacher.notes.update');
+});
+
 Route::get('student/log/{student_id}', [StudentLogController::class, 'show'])->name('student.log.show');
+
+Route::get('/teacher/add-note/{studentId}', [App\Http\Controllers\TeacherController::class, 'addNote'])->name('teacher.addNote');

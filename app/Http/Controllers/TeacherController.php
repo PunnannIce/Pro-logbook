@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Models\StudentLog;
 use App\Models\User;
+use App\Models\Student; // Ensure this line is present
 
 class TeacherController extends Controller
 {
@@ -24,5 +25,11 @@ class TeacherController extends Controller
         }
 
         return redirect()->back()->with('success', 'ความคิดเห็นของอาจารย์ถูกอัปเดตเรียบร้อยแล้ว');
+    }
+
+    public function addNote($studentId)
+    {
+        $student = Student::where('student_id', $studentId)->firstOrFail(); 
+        return view('teacher.addNote', compact('student')); 
     }
 }

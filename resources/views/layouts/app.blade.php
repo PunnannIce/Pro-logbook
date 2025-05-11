@@ -130,6 +130,10 @@
                                     <a class="nav-link  @yield('activeTeacherLog')"
                                         href="{{ route('teacher.index') }}">{{ __('ตรวจสอบบันทึกประจำวัน') }}</a>
                                 </li>
+                                <li class="nav-item">
+                                    <a class="nav-link  @yield('activeTeacherNotes')"
+                                        href="{{ route('teacher.notes') }}">{{ __('บันทึกของอาจารย์นิเทศก์') }}</a>
+                                </li>
                             @endif
 
                             <!-- สำหรับ Student -->
