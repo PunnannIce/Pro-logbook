@@ -52,13 +52,16 @@
                                 <input id="student_id" type="text"
                                     class="form-control @error('student_id') is-invalid @enderror @if (old('student_id')) is-valid @endif"
                                     name="student_id" value="{{ old('student_id') }}" autocomplete="student_id"
-                                    placeholder="รหัสนักศึกษา">
-                                <label for="student_id">{{ __('รหัสนักศึกษา') }}</label>
+                                    placeholder="รหัสผู้ใช้งาน">
+                                <label for="student_id">{{ __('รหัสผู้ใช้งาน') }}</label>
                                 @error('student_id')
                                     <span class="invalid-feedback" role="alert">
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                                <small class="form-text text-muted">
+                                    {{ __('Note: สำหรับนักศึกษาให้ใส่เป็นรหัสนักศึกษา ส่วนพี่เลี้ยงนั้นตามที่สถานประกอบการจะกำหนด') }}
+                                </small>
                             </div>
 
                             <div class="row mb-3">
@@ -67,7 +70,7 @@
                                     <select name="branch"
                                         class="form-select @error('branch') is-invalid @enderror @if (old('branch')) is-valid @endif">
                                         <option value="" selected disabled>{{ __('เลือกสาขา') }}</option>
-                                        @foreach (['วิทยาการคอมพิวเตอร์', 'วิศวกรรมคอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'ภูมิสารสนเทศ'] as $item)
+                                        @foreach (['-','วิทยาการคอมพิวเตอร์', 'วิศวกรรมคอมพิวเตอร์', 'เทคโนโลยีสารสนเทศ', 'ภูมิสารสนเทศ'] as $item)
                                             <option value="{{ $item }}" {{ old('branch') == $item ? 'selected' : '' }}>
                                                 {{ $item }}
                                             </option>
@@ -87,7 +90,7 @@
                                     <select name="year"
                                         class="form-select @error('year') is-invalid @enderror @if (old('year')) is-valid @endif">
                                         <option value="" selected disabled>{{ __('เลือกชั้นปี') }}</option>
-                                        @foreach (['1', '2', '3', '4', '5'] as $item)
+                                        @foreach (['-','1', '2', '3', '4', '5'] as $item)
                                             <option value="{{ $item }}" {{ old('year') == $item ? 'selected' : '' }}>
                                                 {{ $item }}
                                             </option>
@@ -116,7 +119,7 @@
                                         </span>
                                     @enderror
                                     <small class="form-text text-muted">
-                                        {{ __('Note: Roles Mentor and Teacher require admin approval. Until approved, your role will be Student.') }}
+                                        {{ __('Note: บทบาทอาจารย์และพี่เลี้ยงนั้นจะมีการตรวจสอบจากผู้ดูแล.') }}
                                     </small>
                                 </div>
                             </div>
@@ -145,6 +148,9 @@
                                         <strong>{{ $message }}</strong>
                                     </span>
                                 @enderror
+                                <small class="form-text text-muted">
+                                    {{ __('Note: สำหรับนักศึกษาแนะนำให้ใช้ E-mail ของมหาวิทยาลัย') }}
+                                </small>
                             </div>
 
                             <div class="form-floating mb-3">

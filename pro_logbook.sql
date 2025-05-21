@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Host: 127.0.0.1
--- Generation Time: May 11, 2025 at 01:08 PM
+-- Generation Time: May 20, 2025 at 01:30 PM
 -- Server version: 10.4.32-MariaDB
 -- PHP Version: 8.2.12
 
@@ -41,7 +41,9 @@ CREATE TABLE `confirms` (
 --
 
 INSERT INTO `confirms` (`id`, `user_id`, `location_id`, `req`, `created_at`, `updated_at`) VALUES
-(1, 3, 1, 0, '2025-05-08 04:13:29', '2025-05-08 04:33:37');
+(1, 3, 1, 0, '2025-05-08 04:13:29', '2025-05-08 04:33:37'),
+(2, 4, 1, 0, '2025-05-20 02:25:37', '2025-05-20 02:25:59'),
+(3, 8, 2, 0, '2025-05-20 03:42:55', '2025-05-20 03:43:19');
 
 -- --------------------------------------------------------
 
@@ -75,8 +77,7 @@ CREATE TABLE `locations` (
   `student_id4` varchar(10) DEFAULT NULL,
   `mentor_id1` varchar(10) DEFAULT NULL,
   `mentor_id2` varchar(10) DEFAULT NULL,
-  `mentor_id3` varchar(10) DEFAULT NULL,
-  `teacher_id` varchar(10) NOT NULL,
+  `teacher_id` varchar(10) DEFAULT NULL,
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
@@ -85,8 +86,10 @@ CREATE TABLE `locations` (
 -- Dumping data for table `locations`
 --
 
-INSERT INTO `locations` (`id`, `name`, `term_year`, `student_id1`, `student_id2`, `student_id3`, `student_id4`, `mentor_id1`, `mentor_id2`, `mentor_id3`, `teacher_id`, `created_at`, `updated_at`) VALUES
-(1, 'Lotus', '1/2569', '6000000001', NULL, NULL, NULL, '3', '', '', '2', NULL, '2025-05-10 07:49:55');
+INSERT INTO `locations` (`id`, `name`, `term_year`, `student_id1`, `student_id2`, `student_id3`, `student_id4`, `mentor_id1`, `mentor_id2`, `teacher_id`, `created_at`, `updated_at`) VALUES
+(1, 'Lotus', '1/69', '6000000001', '6000000002', NULL, NULL, '3', '4', '2', NULL, '2025-05-20 02:25:59'),
+(2, 'BigC', '1/69', NULL, NULL, NULL, NULL, '8', NULL, '7', '2025-05-17 07:55:54', '2025-05-20 03:43:19'),
+(3, 'The Best One', '1/69', NULL, NULL, NULL, NULL, NULL, NULL, NULL, '2025-05-20 02:00:25', '2025-05-20 02:17:11');
 
 -- --------------------------------------------------------
 
@@ -317,9 +320,9 @@ INSERT INTO `student_loc_infos` (`id`, `student_id`, `duty1`, `duty2`, `duty3`, 
 CREATE TABLE `student_log` (
   `id` bigint(20) NOT NULL,
   `student_id` varchar(10) NOT NULL,
-  `log_date` date NOT NULL,
-  `log_header` text NOT NULL,
-  `log_detail` longtext NOT NULL,
+  `log_date` date DEFAULT NULL,
+  `log_header` text DEFAULT NULL,
+  `log_detail` longtext DEFAULT NULL,
   `t_comment` mediumtext DEFAULT NULL,
   `m_comment` mediumtext DEFAULT NULL,
   `signature` tinyint(1) NOT NULL DEFAULT 0,
@@ -333,7 +336,8 @@ CREATE TABLE `student_log` (
 --
 
 INSERT INTO `student_log` (`id`, `student_id`, `log_date`, `log_header`, `log_detail`, `t_comment`, `m_comment`, `signature`, `created_date`, `updated_date`, `log`) VALUES
-(1, '6000000001', '2025-05-05', '0', '0', '0', '0', 0, '2025-05-05', '2025-05-05', '[{\"log_date\":\"2025-05-05\",\"log_header\":\"1\",\"log_detail\":\"2345\",\"created_date\":\"2025-05-05 11:56:29\",\"t_comments\":[\"6\"],\"m_comments\":[\"8\"],\"signature\":\"no\"},{\"log_date\":\"2025-05-06\",\"log_header\":\"fix computer\",\"log_detail\":\"fix computer startup error due to 1 memory slot is full of dust\",\"created_date\":\"2025-05-05 11:57:19\",\"t_comments\":[\"good\"],\"m_comments\":[\"well done\"],\"signature\":\"no\"},{\"log_date\":\"2025-05-07\",\"log_header\":\"\\u0e40\\u0e1b\\u0e47\\u0e19\\u0e27\\u0e31\\u0e19\\u0e17\\u0e35\\u0e48\\u0e2a\\u0e07\\u0e1a\",\"log_detail\":\"\\u0e17\\u0e33\\u0e07\\u0e32\\u0e19\\u0e40\\u0e2d\\u0e01\\u0e2a\\u0e32\\u0e23\\u0e19\\u0e34\\u0e14\\u0e2b\\u0e19\\u0e48\\u0e2d\\u0e22\\u0e41\\u0e25\\u0e30\\u0e0a\\u0e48\\u0e27\\u0e22\\u0e1e\\u0e35\\u0e48\\u0e46\\u0e02\\u0e19\\u0e04\\u0e2d\\u0e21\\u0e1e\\u0e34\\u0e27\\u0e40\\u0e15\\u0e2d\\u0e23\\u0e4c\\u0e40\\u0e01\\u0e48\\u0e32\\u0e44\\u0e1b\\u0e40\\u0e01\\u0e47\\u0e1a\\u0e43\\u0e19\\u0e2b\\u0e49\\u0e2d\\u0e07\\u0e40\\u0e01\\u0e47\\u0e1a\\u0e02\\u0e2d\\u0e07\",\"created_date\":\"2025-05-05 11:58:02\",\"m_comments\":[\"\\u0e17\\u0e33\\u0e2b\\u0e19\\u0e49\\u0e32\\u0e17\\u0e35\\u0e48\\u0e44\\u0e14\\u0e49\\u0e2d\\u0e22\\u0e48\\u0e32\\u0e07\\u0e22\\u0e2d\\u0e14\\u0e40\\u0e22\\u0e35\\u0e48\\u0e22\\u0e21\\u0e21\\u0e32\\u0e01\"],\"signature\":\"yes\"},{\"log_date\":\"2025-05-08\",\"log_header\":\"\\u0e17\\u0e14\\u0e2a\\u0e2d\\u0e1a\\u0e2a\\u0e21\\u0e1a\\u0e39\\u0e23\\u0e13\\u0e4c\",\"log_detail\":\"\\u0e44\\u0e21\\u0e48\\u0e21\\u0e35\\u0e2d\\u0e30\\u0e44\\u0e23\\u0e40\\u0e1b\\u0e47\\u0e19\\u0e1e\\u0e34\\u0e40\\u0e28\\u0e29 \\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e2a\\u0e33\\u0e40\\u0e23\\u0e47\\u0e08\",\"created_date\":\"2025-05-08 11:08:31\",\"t_comments\":[\"\\u0e44\\u0e21\\u0e48\\u0e21\\u0e35\\u0e2d\\u0e30\\u0e44\\u0e23\\u0e1c\\u0e34\\u0e14\\u0e1b\\u0e01\\u0e15\\u0e34 \\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e40\\u0e23\\u0e35\\u0e22\\u0e1a\\u0e23\\u0e49\\u0e2d\\u0e22\"],\"m_comments\":[\"\\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e40\\u0e23\\u0e35\\u0e22\\u0e1a\\u0e23\\u0e49\\u0e2d\\u0e22\"],\"signature\":\"yes\"},{\"log_date\":\"2025-05-09\",\"log_header\":\"test\",\"log_detail\":\"123455\",\"created_date\":\"2025-05-08 14:17:36\",\"t_comments\":[\"test1234\"],\"m_comments\":[\"12345\"],\"signature\":\"no\"}]');
+(1, '6000000001', '2025-05-05', '0', '0', '0', '0', 0, '2025-05-05', '2025-05-05', '[{\"log_date\":\"2025-05-05\",\"log_header\":\"1\",\"log_detail\":\"2345\",\"created_date\":\"2025-05-05 11:56:29\",\"t_comments\":[\"6\"],\"m_comments\":[\"8\"],\"signature\":\"no\"},{\"log_date\":\"2025-05-06\",\"log_header\":\"fix computer\",\"log_detail\":\"fix computer startup error due to 1 memory slot is full of dust\",\"created_date\":\"2025-05-05 11:57:19\",\"t_comments\":[\"good\"],\"m_comments\":[\"well done\"],\"signature\":\"no\"},{\"log_date\":\"2025-05-07\",\"log_header\":\"\\u0e40\\u0e1b\\u0e47\\u0e19\\u0e27\\u0e31\\u0e19\\u0e17\\u0e35\\u0e48\\u0e2a\\u0e07\\u0e1a\",\"log_detail\":\"\\u0e17\\u0e33\\u0e07\\u0e32\\u0e19\\u0e40\\u0e2d\\u0e01\\u0e2a\\u0e32\\u0e23\\u0e19\\u0e34\\u0e14\\u0e2b\\u0e19\\u0e48\\u0e2d\\u0e22\\u0e41\\u0e25\\u0e30\\u0e0a\\u0e48\\u0e27\\u0e22\\u0e1e\\u0e35\\u0e48\\u0e46\\u0e02\\u0e19\\u0e04\\u0e2d\\u0e21\\u0e1e\\u0e34\\u0e27\\u0e40\\u0e15\\u0e2d\\u0e23\\u0e4c\\u0e40\\u0e01\\u0e48\\u0e32\\u0e44\\u0e1b\\u0e40\\u0e01\\u0e47\\u0e1a\\u0e43\\u0e19\\u0e2b\\u0e49\\u0e2d\\u0e07\\u0e40\\u0e01\\u0e47\\u0e1a\\u0e02\\u0e2d\\u0e07\",\"created_date\":\"2025-05-05 11:58:02\",\"m_comments\":[\"\\u0e17\\u0e33\\u0e2b\\u0e19\\u0e49\\u0e32\\u0e17\\u0e35\\u0e48\\u0e44\\u0e14\\u0e49\\u0e2d\\u0e22\\u0e48\\u0e32\\u0e07\\u0e22\\u0e2d\\u0e14\\u0e40\\u0e22\\u0e35\\u0e48\\u0e22\\u0e21\\u0e21\\u0e32\\u0e01 OK\"],\"signature\":\"yes\"},{\"log_date\":\"2025-05-08\",\"log_header\":\"\\u0e17\\u0e14\\u0e2a\\u0e2d\\u0e1a\\u0e2a\\u0e21\\u0e1a\\u0e39\\u0e23\\u0e13\\u0e4c\",\"log_detail\":\"\\u0e44\\u0e21\\u0e48\\u0e21\\u0e35\\u0e2d\\u0e30\\u0e44\\u0e23\\u0e40\\u0e1b\\u0e47\\u0e19\\u0e1e\\u0e34\\u0e40\\u0e28\\u0e29 \\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e2a\\u0e33\\u0e40\\u0e23\\u0e47\\u0e08\",\"created_date\":\"2025-05-08 11:08:31\",\"t_comments\":[\"\\u0e44\\u0e21\\u0e48\\u0e21\\u0e35\\u0e2d\\u0e30\\u0e44\\u0e23\\u0e1c\\u0e34\\u0e14\\u0e1b\\u0e01\\u0e15\\u0e34 \\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e40\\u0e23\\u0e35\\u0e22\\u0e1a\\u0e23\\u0e49\\u0e2d\\u0e22\"],\"m_comments\":[\"\\u0e41\\u0e01\\u0e49\\u0e44\\u0e02\\u0e40\\u0e23\\u0e35\\u0e22\\u0e1a\\u0e23\\u0e49\\u0e2d\\u0e22\"],\"signature\":\"yes\"},{\"log_date\":\"2025-05-09\",\"log_header\":\"test\",\"log_detail\":\"123455\",\"created_date\":\"2025-05-08 14:17:36\",\"t_comments\":[\"test1234 OK\"],\"m_comments\":[\"12345\"],\"signature\":\"yes\"}]'),
+(4, '6000000002', NULL, NULL, NULL, NULL, NULL, 0, '2025-05-17', '2025-05-17', '[{\"log_date\":\"2025-05-15\",\"log_header\":\"1\",\"log_detail\":\"2345678\",\"created_date\":\"2025-05-17 14:51:37\",\"signature\":\"yes\",\"m_comments\":[\"good\"],\"t_comments\":[\"\\u0e14\\u0e35\\u0e07\\u0e32\\u0e21\"]},{\"log_date\":\"2025-05-18\",\"log_header\":\"good day\",\"log_detail\":\"good good good\",\"created_date\":\"2025-05-17 14:52:07\",\"t_comments\":[\"\\u0e1e\\u0e23\\u0e30\\u0e23\\u0e32\\u0e21\\u0e41\\u0e1b\\u0e14\"]},{\"log_date\":\"2025-05-19\",\"log_header\":\"\\u0e2a\\u0e38\\u0e14\\u0e22\\u0e2d\\u0e14\",\"log_detail\":\"\\u0e17\\u0e33\\u0e07\\u0e32\\u0e19\\u0e40\\u0e2d\\u0e01\\u0e2a\\u0e32\\u0e23\\u0e07\\u0e48\\u0e32\\u0e22\\u0e46\",\"created_date\":\"2025-05-20 10:27:05\"}]');
 
 -- --------------------------------------------------------
 
@@ -355,7 +359,8 @@ CREATE TABLE `teacher_notes` (
 --
 
 INSERT INTO `teacher_notes` (`id`, `student_id`, `supervision_type`, `note_detail`, `created_at`, `updated_at`) VALUES
-(1, '6000000001', 'ออนไซต์', 'นักศึกษาปฏิบัติได้ดีเยี่ยม แก้ไขแล้ว', '2025-05-11', '2025-05-11');
+(1, '6000000001', 'ออนไซต์', 'นักศึกษาปฏิบัติได้ดีเยี่ยม แก้ไขแล้ว', '2025-05-11', '2025-05-20'),
+(3, '6000000002', 'ออนไซต์', 'ใช้ได้', '2025-05-17', '2025-05-20');
 
 -- --------------------------------------------------------
 
@@ -367,8 +372,8 @@ CREATE TABLE `users` (
   `id` bigint(20) UNSIGNED NOT NULL,
   `name` varchar(255) DEFAULT NULL,
   `student_id` varchar(10) DEFAULT NULL,
-  `branch` enum('วิทยาการคอมพิวเตอร์','เทคโนโลยีสารสนเทศ','เทคโนโลยีเครือข่าย','ภูมิสารสนเทศ') DEFAULT NULL,
-  `year` enum('1','2','3','4','5') DEFAULT NULL,
+  `branch` enum('วิทยาการคอมพิวเตอร์','เทคโนโลยีสารสนเทศ','เทคโนโลยีเครือข่าย','ภูมิสารสนเทศ','-') DEFAULT NULL,
+  `year` enum('1','2','3','4','5','-') DEFAULT NULL,
   `phone_number` varchar(255) DEFAULT NULL,
   `email` varchar(255) NOT NULL,
   `email_verified_at` timestamp NULL DEFAULT NULL,
@@ -387,9 +392,13 @@ INSERT INTO `users` (`id`, `name`, `student_id`, `branch`, `year`, `phone_number
 (1, 'admin', 'admin', NULL, NULL, NULL, 'admin@gmail.com', '2025-05-05 02:40:25', '$2y$10$tQZ04xByjNLglhUs.nGY7.vGxv92q3E1We/6P4Ukr5q2IVUqEDBb2', 'Administrator', NULL, '2025-05-05 02:40:25', '2025-05-05 02:40:25'),
 (2, 'อาจารย์สุวาณี คำศรี', '1000000001', NULL, NULL, NULL, 'teacher@gmail.com', '2025-05-05 02:40:25', '$2y$10$Xh9WEl2BpswyRl/4l4rES.ZZVzhbwjcZBRHtCc0t2teYCzNMjpgou', 'Teacher', NULL, '2025-05-05 02:40:25', '2025-05-06 01:48:08'),
 (3, 'นายซีเมเจอร์ บลูโซล', '0000000001', NULL, NULL, NULL, 'mentor1@gmail.com', '2025-05-05 02:40:25', '$2y$10$OhmIEg2NN23ROtZtmdpGZeeRgjY7bsjQTyuxOX0.R0T9m9QCti/oC', 'Mentor', NULL, '2025-05-05 02:40:25', '2025-05-06 01:48:17'),
-(4, 'นายผ้าพันคอ ดวงดาว', NULL, NULL, NULL, NULL, 'mentor2@gmail.com', '2025-05-05 02:40:25', '$2y$10$zUyR0Yc8LR3//G3GuCodieOzUc19rIzUb97CLR/6weIBBaT6SFtr.', 'Student', NULL, '2025-05-05 02:40:25', '2025-05-05 02:40:25'),
+(4, 'นายผ้าพันคอ ดวงดาว', NULL, NULL, NULL, NULL, 'mentor2@gmail.com', '2025-05-05 02:40:25', '$2y$10$zUyR0Yc8LR3//G3GuCodieOzUc19rIzUb97CLR/6weIBBaT6SFtr.', 'Mentor', NULL, '2025-05-05 02:40:25', '2025-05-20 01:49:09'),
 (5, 'นางสาวแทนรัก ประนา', '6000000001', 'วิทยาการคอมพิวเตอร์', '1', '0123456789', 'student@gmail.com', '2025-05-05 02:40:25', '$2y$10$yB3J8dem7jOIiIpi0J6oxumej0/5I30J3B2IYdCH.9LMOxuAtth9S', 'Student', NULL, '2025-05-05 02:40:25', '2025-05-05 02:40:25'),
-(6, 'นายดวงดาว สว่างจ้า', '6000000002', 'วิทยาการคอมพิวเตอร์', '1', '0212223333', 'student2@gmail.com', '2025-05-06 01:44:48', '$2y$10$Tz5E6LX5ZuM2rVo7hH3itu.TUb1RoJk9uPJBxPCIe19Tnu0fgC2TW', 'Student', '', '2025-05-06 01:44:48', '2025-05-06 01:44:48');
+(6, 'นายดวงดาว สว่างจ้า', '6000000002', 'วิทยาการคอมพิวเตอร์', '1', '0212223333', 'student2@gmail.com', '2025-05-06 01:44:48', '$2y$10$Tz5E6LX5ZuM2rVo7hH3itu.TUb1RoJk9uPJBxPCIe19Tnu0fgC2TW', 'Student', '', '2025-05-06 01:44:48', '2025-05-06 01:44:48'),
+(7, 'อาจารย์ สุดแต่ใจ จะไขว่คว้า', '1000000002', 'เทคโนโลยีสารสนเทศ', '-', '1234567890', 'teacher2@gmail.com', '2025-05-20 01:46:30', '$2y$10$kjN6MkH0/VPF2qSbVBPSmeFya8xfKPItacrExUCzPdC2S7d/rAhXu', 'Teacher', '', '2025-05-20 01:46:30', '2025-05-20 01:47:11'),
+(8, 'นางสาว แสงดาว ประกาย', NULL, '-', '-', '2314567890', 'mentor3@gmail.com', '2025-05-20 02:27:19', '$2y$10$lD0oh3DlpXHhhCKGRBimyeiqKuXQH6NITeY4T7m9BeaEQkLIGNboS', 'Mentor', '', '2025-05-20 02:27:19', '2025-05-20 02:28:37'),
+(9, 'นาย นกน้อย คล้อยตามลม', '6000000003', 'วิทยาการคอมพิวเตอร์', '1', '0981234567', 'student3@gmail.com', '2025-05-20 03:14:35', '$2y$10$Z5WF/xLShVMMvvwp2HYPjugHnUf0NBsCttIKKdK5Pd7B.u3vzFqyy', 'Student', '', '2025-05-20 03:14:35', '2025-05-20 03:14:35'),
+(10, 'นาย ปุณณานันท์ เทพศาสตรา', '6314631007', 'วิทยาการคอมพิวเตอร์', '5', '0614874401', '6314631007@rbru.ac.th', '2025-05-20 04:06:32', '$2y$10$7Kw.mW04k7fp6g6TvcGeNOaGPohUn1u8nYZ.gv6kNSsPJi6KK6ANW', 'Student', '', '2025-05-20 04:06:32', '2025-05-20 04:29:19');
 
 --
 -- Indexes for dumped tables
@@ -418,7 +427,7 @@ ALTER TABLE `locations`
   ADD UNIQUE KEY `locations_student_id2_unique` (`student_id2`),
   ADD UNIQUE KEY `locations_student_id3_unique` (`student_id3`),
   ADD UNIQUE KEY `locations_student_id4_unique` (`student_id4`),
-  ADD UNIQUE KEY `locations_mentor_id_unique` (`mentor_id1`,`mentor_id2`,`mentor_id3`);
+  ADD UNIQUE KEY `locations_mentor_id_unique` (`mentor_id1`,`mentor_id2`) USING BTREE;
 
 --
 -- Indexes for table `location_infos`
@@ -496,7 +505,7 @@ ALTER TABLE `users`
 -- AUTO_INCREMENT for table `confirms`
 --
 ALTER TABLE `confirms`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `failed_jobs`
@@ -508,7 +517,7 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT for table `locations`
 --
 ALTER TABLE `locations`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `location_infos`
@@ -544,19 +553,19 @@ ALTER TABLE `student_loc_infos`
 -- AUTO_INCREMENT for table `student_log`
 --
 ALTER TABLE `student_log`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT for table `teacher_notes`
 --
 ALTER TABLE `teacher_notes`
-  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` bigint(20) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT for table `users`
 --
 ALTER TABLE `users`
-  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

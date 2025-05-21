@@ -9,8 +9,62 @@ class TeacherNotesController extends Controller
 {
     public function index()
     {
-        $students = User::where('role', 'Student')->get();
-        return view('teacher.notes', compact('students'));
+        $user = auth()->user();
+        $userId = $user->id;
+        $role = $user->role;
+
+        $studentIds = [];
+
+        if ($role === 'Teacher') {
+            // Get locations assigned to this teacher
+            $locations = \App\Models\Location::where('teacher_id', $userId)->get();
+        } elseif ($role === 'Mentor') {
+            // Get locations assigned to this mentor (mentor_id1 or mentor_id2)
+            $locations = \App\Models\Location::where('mentor_id1', $userId)
+                ->orWhere('mentor_id2', $userId)
+                ->get();
+        } else {
+            // For other roles, no students
+            $locations = collect();
+        }
+
+        // Collect all student IDs from these locations
+        foreach ($locations as $location) {
+            if ($location->student_id1) {
+                $studentIds[] = $location->student_id1;
+            }
+            if ($location->student_id2) {
+                $studentIds[] = $location->student_id2;
+            }
+            if ($location->student_id3) {
+                $studentIds[] = $location->student_id3;
+            }
+            if ($location->student_id4) {
+                $studentIds[] = $location->student_id4;
+            }
+        }
+
+        // Remove duplicates
+        $studentIds = array_unique($studentIds);
+
+        // Fetch students with those IDs and role 'Student'
+        $students = User::where('role', 'Student')
+            ->whereIn('student_id', $studentIds)
+            ->get();
+
+        // Map each student to their location
+        $studentsWithLocation = $students->map(function ($student) use ($locations) {
+            $location = $locations->first(function ($loc) use ($student) {
+                return $loc->student_id1 == $student->student_id
+                    || $loc->student_id2 == $student->student_id
+                    || $loc->student_id3 == $student->student_id
+                    || $loc->student_id4 == $student->student_id;
+            });
+            $student->location = $location;
+            return $student;
+        });
+
+        return view('teacher.notes', ['students' => $studentsWithLocation]);
     }
 
     public function store(Request $request)

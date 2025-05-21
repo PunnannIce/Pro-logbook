@@ -7,12 +7,14 @@
     <div class="card shadow-sm">
         <div class="card-body">
             <table class="table table-bordered table-hover table-striped align-middle text-center">
-                <thead class="table-primary">
+                <thead>
                     <tr>
                         <th>รหัสนักศึกษา</th>
                         <th>ชื่อนักศึกษา</th>
                         <th>สาขา</th>
                         <th>ชั้นปี</th>
+                        <th>สถานที่ฝึก</th>
+                        <th>ภาคการศึกษา</th>
                         <th>เพิ่มรายการนิเทศ</th>
                     </tr>
                 </thead>
@@ -23,6 +25,8 @@
                         <td>{{ $student->name }}</td>
                         <td>{{ $student->branch ?? 'ไม่พบข้อมูล' }}</td>
                         <td>{{ $student->year ?? 'ไม่พบข้อมูล' }}</td>
+                        <td>{{ $student->location->name ?? '-' }}</td>
+                        <td>{{ $student->location->term_year ?? '-' }}</td>
                         <td>
                             @if($student->student_id)
                                 <a 
@@ -44,4 +48,17 @@
         </div>
     </div>
 </div>
+@endsection
+
+@section('scripts')
+<script>
+    $(document).ready(function() {
+        $('.table').DataTable({
+            responsive: true,
+            language: {
+                url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/th.json'
+            }
+        });
+    });
+</script>
 @endsection

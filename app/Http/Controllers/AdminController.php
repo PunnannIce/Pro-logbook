@@ -82,10 +82,8 @@ class AdminController extends Controller
                     $location->mentor_id1 = $userId;
                 } elseif (!$location->mentor_id2) {
                     $location->mentor_id2 = $userId;
-                } elseif (!$location->mentor_id3) {
-                    $location->mentor_id3 = $userId;
                 } else {
-                    // ถ้าทั้ง 3 ช่องเต็ม จะไม่ใส่เพิ่ม
+                    // ถ้าทั้ง 2 ช่องเต็ม จะไม่ใส่เพิ่ม
                     return redirect()->back()->with('error', 'สถานที่นี้มี Mentor ครบแล้ว');
                 }
 

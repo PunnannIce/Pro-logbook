@@ -201,7 +201,7 @@
                     </div>
                 </div>
                 <div class="text-end mt-3">
-                    <a href="{{-- route('student.editProfile', ['id' => $user->student_id]) --}}" class="btn btn-outline-primary">แก้ไขข้อมูลส่วนตัว</a>
+                    {{-- <a href="route('student.editProfile', ['id' => $user->student_id])" class="btn btn-outline-primary">แก้ไขข้อมูลส่วนตัว</a> --}}
                 </div>
             </div>
         </div>
@@ -211,7 +211,7 @@
             <div class="card shadow-sm p-4">
                 <div class="d-flex justify-content-between align-items-center">
                     <h4 class="fw-bold">ข้อมูลสถานที่ฝึกงาน</h4>
-                    <a href="{{-- route('location_infos.editProfile', ['id' => $user->student_id]) --}}" class="btn btn-outline-primary">แก้ไขข้อมูลสถานที่ฝึกงาน</a>
+                    {{-- <a href="route('location_infos.editProfile', ['id' => $user->student_id])" class="btn btn-outline-primary">แก้ไขข้อมูลสถานที่ฝึกงาน</a> --}}
                 </div>
                 <div class="row mt-3">
                     @php

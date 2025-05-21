@@ -56,6 +56,7 @@ class RegisterController extends Controller
             'phone_number' => ['required', 'numeric', 'digits:10'],
             'email' => ['required', 'string', 'email', 'max:255', 'unique:users'],
             'password' => ['required', 'string', 'min:8', 'confirmed'],
+            'role' => ['required', 'in:Student,Mentor,Teacher'],
         ];
 
         $messages = [
@@ -100,14 +101,16 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+        $fullName = trim(($data['prefix'] ?? '') . ' ' . $data['name']);
         return User::create([
-            'name' => $data['name'],
+            'name' => $fullName,
             'email' => $data['email'],
             'password' => Hash::make($data['password']),
             'student_id' => $data['student_id'] ?? null,
             'branch' => $data['branch'] ?? null,
             'year' => $data['year'] ?? null,
             'phone_number' => $data['phone_number'] ?? null,
+            'role' => $data['role'] ?? 'Student',
             'email_verified_at' => now(),
             'remember_token' => '',
         ]);

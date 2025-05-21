@@ -12,9 +12,9 @@ class LocationController extends Controller
 
     public function index(Request $request)
     {
+        $userId = auth()->user()->id;
         $locations = Location::all();
-        $users = User::all(); // Fetch all users
-
+        
         // รวม student_id1-4
         $studentIds = $locations->flatMap(function ($loc) {
             return [
@@ -25,16 +25,15 @@ class LocationController extends Controller
             ];
         })->filter()->unique();
 
-        // รวม mentor_id1-3
+        // รวม mentor_id1-2
         $mentorIds = $locations->flatMap(function ($loc) {
             return [
                 $loc->mentor_id1,
                 $loc->mentor_id2,
-                $loc->mentor_id3,
             ];
         })->filter()->unique();
 
-        // รวม teacher_id1-3
+        // รวม teacher_id
         $teacherIds = $locations->flatMap(function ($loc) {
             return [
                 $loc->teacher_id
@@ -60,6 +59,7 @@ class LocationController extends Controller
         // Validate ข้อมูลที่รับมาจากฟอร์ม
         $request->validate([
             'name' => 'required|string|max:255',
+            'term_year' => 'required|string|max:255',
             'student_id1' => 'nullable|size:10',
             'student_id2' => 'nullable|size:10',
             'student_id3' => 'nullable|size:10',
@@ -69,6 +69,7 @@ class LocationController extends Controller
         // สร้างข้อมูลในฐานข้อมูล
         Location::create([
             'name' => $request->name,
+            'term_year' => $request->term_year,
             'student_id1' => $request->student_id1,
             'student_id2' => $request->student_id2,
             'student_id3' => $request->student_id3,
@@ -83,6 +84,7 @@ class LocationController extends Controller
     {
         $request->validate([
             'name' => 'required|string|max:255',
+            'term_year' => 'required|string|max:255',
             'student_id1' => 'nullable|size:10',
             'student_id2' => 'nullable|size:10',
             'student_id3' => 'nullable|size:10',
@@ -92,6 +94,7 @@ class LocationController extends Controller
         $location = Location::findOrFail($id);
         $location->update([
             'name' => $request->name,
+            'term_year' => $request->term_year,
             'student_id1' => $request->student_id1,
             'student_id2' => $request->student_id2,
             'student_id3' => $request->student_id3,
@@ -108,9 +111,28 @@ class LocationController extends Controller
         ]);
 
         $location = Location::find($request->location_id);
-        $location->teacher_id = auth()->user()->id; // Assuming the logged-in user is the advisor
+        $location->teacher_id = auth()->user()->id; 
         $location->save();
 
-        return redirect()->route('location.index')->with('success', 'ลงทะเบียนที่ปรึกษาสำเร็จ!');
+        return redirect()->route('location.index')->with('success', 'ลงทะเบียนอาจารย์นิเทศก์สำเร็จ!');
     }
+
+    public function cancelAdvisor(Request $request)
+    {
+        $request->validate([
+            'location_id' => 'required|exists:locations,id',
+        ]);
+
+        $location = Location::where('id', $request->location_id)
+            ->where('teacher_id', auth()->user()->id)
+            ->first();
+
+        if ($location) {
+            $location->teacher_id = null;
+            $location->save();
+        }
+
+        return redirect()->route('location.index')->with('success', 'ยกเลิกลงทะเบียนอาจารย์นิเทศก์สำเร็จ!');
+    }
+
 }

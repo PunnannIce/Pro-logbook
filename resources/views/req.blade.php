@@ -35,7 +35,7 @@
                         style="width: 60px; height: 3px; background-color: #20c997; border-radius: 50px;"></div>
 
                     <p class="fs-5 mb-4">คุณได้ลงทะเบียนกับสถานที่:
-                        <span class="fw-semibold text-primary">{{ $registeredLocation->name }}</span>
+                        <span class="fw-semibold text-primary">{{ $registeredLocation->name }} - {{ $registeredLocation->term_year }}</span>
                     </p>
 
                     <button type="button" class="btn btn-warning btn-lg px-4 py-2 shadow-sm" data-bs-toggle="modal"
@@ -62,7 +62,9 @@
                                             id="location" name="location_id" required>
                                             <option value="">-- กรุณาเลือกสถานที่ --</option>
                                             @foreach ($locations as $location)
-                                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                                @if (is_null($location->mentor_id1) || is_null($location->mentor_id2))
+                                                    <option value="{{ $location->id }}">{{ $location->name }} - {{ $location->term_year }}</option>
+                                                @endif
                                             @endforeach
                                         </select>
                                         @error('location_id')
@@ -81,7 +83,7 @@
 
                     {{-- กรณียังไม่เคยลงทะเบียน --}}
                 @else
-                    <form action="{{ route('confirms.store') }}" method="POST">
+                    <form action="{{ route('confirms.store') }}" method="POST" id="registerForm">
                         @csrf
                         <div class="mb-4">
                             <label for="location" class="form-label">สถานที่</label>
@@ -89,23 +91,20 @@
                                 name="location_id" required>
                                 <option value="">-- กรุณาเลือกสถานที่ --</option>
                                 @foreach ($locations as $location)
-                                    <option value="{{ $location->id }}">{{ $location->name }}</option>
+                                    @if (is_null($location->mentor_id1) || is_null($location->mentor_id2))
+                                        <option value="{{ $location->id }}">{{ $location->name }} - {{ $location->term_year }}</option>
+                                    @endif
                                 @endforeach
                             </select>
                             @error('location_id')
                                 <div class="invalid-feedback">{{ $message }}</div>
                             @enderror
                         </div>
-                        <button type="submit" class="btn btn-primary btn-lg">ลงทะเบียน</button>
+                        <button type="submit" class="btn btn-primary btn-lg" id="submitBtn">ลงทะเบียน</button>
                     </form>
                 @endif
 
             </div>
         </div>
     </div>
-@endsection
-
-@section('scripts')
-    <!-- Bootstrap Modal support -->
-    
 @endsection

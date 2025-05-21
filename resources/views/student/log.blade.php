@@ -23,7 +23,7 @@
         })->first();
 
         $mentorNames = $locations 
-            ? collect([$locations->mentor_id1, $locations->mentor_id2, $locations->mentor_id3])
+            ? collect([$locations->mentor_id1, $locations->mentor_id2])
                 ->filter()
                 ->flatMap(function ($mentorId) {
                     return \App\Models\User::where('id', $mentorId)->pluck('name');
@@ -65,12 +65,12 @@
                     <label for="mentorName" class="form-label">ชื่อพี่เลี้ยง</label>
                     @if ($locations)
                         <ul class="list-group">
-                            @foreach(collect([$locations->mentor_id1, $locations->mentor_id2, $locations->mentor_id3])->filter() as $mentorId)
-                                @php
-                                    $mentorName = \App\Models\User::where('id', $mentorId)->pluck('name')->first();
-                                @endphp
-                                <li class="list-group-item text-start">{{ $mentorName ?? 'ไม่พบข้อมูล' }}</li>
-                            @endforeach
+                        @foreach(collect([$locations->mentor_id1, $locations->mentor_id2])->filter() as $mentorId)
+                            @php
+                                $mentorName = \App\Models\User::where('id', $mentorId)->pluck('name')->first();
+                            @endphp
+                            <li class="list-group-item text-start">{{ $mentorName ?? 'ไม่พบข้อมูล' }}</li>
+                        @endforeach
                         </ul>
                     @else
                         <input type="text" class="form-control" value="ไม่พบข้อมูล" readonly>
@@ -97,81 +97,90 @@
     @endif
 
     @if(auth()->user()->role === 'Student')
-        <div class="d-flex justify-content-between mb-3">
-            <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addLogModal">เพิ่มบันทึก</button>
-            <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editLogModal">แก้ไขบันทึก</button>
-        </div>
+        @if($locations)
+            <div class="d-flex justify-content-between mb-3">
+                <button type="button" class="btn btn-success" data-bs-toggle="modal" data-bs-target="#addLogModal">เพิ่มบันทึก</button>
+                <button type="button" class="btn btn-warning" data-bs-toggle="modal" data-bs-target="#editLogModal">แก้ไขบันทึก</button>
+            </div>
+        @else
+            <div class="alert alert-warning text-center" role="alert">
+                ท่านยังไม่ได้ลงทะเบียนสถานที่ฝึกงาน กรุณาแจ้งอาจารย์ที่รับผิดชอบ
+            </div>
+        @endif
     @endif
 
     @php
         $logs = collect($student_log->where('student_id', $studentId)->first()->log ?? [])->sortBy('log_date');
     @endphp
 
-    <div class="table-responsive">
-        <table class="table table-bordered table-striped table-hover text-center align-middle" id="logEntries">
-            <thead class="table-primary">
-                <tr>
-                    <th class="text-center" style="width: 12%;">วันที่</th>
-                    <th class="text-center" style="width: 18%;">หัวข้อ</th>
-                    <th class="text-center" style="width: 30%;">รายละเอียด</th>
-                    @if(auth()->user()->role === 'Teacher' || auth()->user()->role === 'Mentor')
-                    <th class="text-center" style="width: 10%;">วันที่สร้าง</th>
-                    @endif
-                    <th class="text-center" style="width: 10%;">ความเห็นจากอาจารย์</th>
-                    <th class="text-center" style="width: 10%;">ความเห็นจากพี่เลี้ยง</th>
-                    <th class="text-center" style="width: 10%;">ลายเซ็นต์พี่เลี้ยง</th>
-                </tr>
-            </thead>
-            <tbody>
-                @forelse($logs as $log)
-                <tr>
-                    <td>{{ \Carbon\Carbon::parse($log['log_date'])->format('d/m/Y') }}</td>
-                    <td>{{ $log['log_header'] }}</td>
-                    <td>{{ $log['log_detail'] }}</td>
-                    @if(auth()->user()->role === 'Teacher' || auth()->user()->role === 'Mentor')
-                    <td>{{ \Carbon\Carbon::parse($log['created_date'])->format('d/m/Y') }}</td>
-                    @endif
-                    <td>
-                        <button type="button" class="btn btn-outline-primary btn-sm viewTeacherComments" data-bs-toggle="modal" data-bs-target="#teacherCommentsModal" data-comments="{{ json_encode($log['t_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
-                            <i class="bi bi-eye"></i> 
-                            @if(auth()->user()->role === 'Teacher')
-                                เพิ่มความคิดเห็น
-                            @else
-                                ดูความคิดเห็น
-                            @endif
-                        </button>
-                    </td>
-                    <td>
-                        <button type="button" class="btn btn-outline-primary btn-sm viewMentorComments" data-bs-toggle="modal" data-bs-target="#mentorCommentsModal" data-comments="{{ json_encode($log['m_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
-                            <i class="bi bi-eye"></i> 
-                            @if(auth()->user()->role === 'Mentor')
-                                เพิ่มความคิดเห็น
-                            @else
-                                ดูความคิดเห็น
-                            @endif
-                        </button>
-                    </td>
-                    <td>
-                        <form action="{{ route('mentor.signature.update') }}" method="POST" class="signature-form">
-                            @csrf
-                            <input type="hidden" name="student_id" value="{{ $studentId }}">
-                            <input type="hidden" name="log_date" value="{{ $log['log_date'] }}">
-                            <input type="hidden" name="signature" value="{{ ($log['signature'] ?? 'no') === 'yes' ? '0' : '1' }}">
-                            <input type="checkbox" class="form-check-input signature-checkbox" 
-                                {{ ($log['signature'] ?? 'no') === 'yes' ? 'checked' : '' }} 
-                                {{ auth()->user()->role === 'Mentor' ? '' : 'disabled' }} 
-                                onchange="this.form.submit()">
-                        </form>
-                    </td>
-                </tr>
-                @empty
-                <tr>
-                    <td colspan="7">ไม่มีข้อมูลบันทึก</td>
-                </tr>
-                @endforelse
-            </tbody>
-        </table>
-    </div>
+    @if(!$locations && auth()->user()->role === 'Student')
+    @else
+        <div class="table-responsive">
+            <table class="table table-bordered table-striped table-hover text-center align-middle" id="logEntries">
+                <thead>
+                    <tr>
+                        <th class="text-center" style="width: 12%;">วันที่</th>
+                        <th class="text-center" style="width: 18%;">หัวข้อ</th>
+                        <th class="text-center" style="width: 30%;">รายละเอียด</th>
+                        @if(auth()->user()->role === 'Teacher' || auth()->user()->role === 'Mentor')
+                        <th class="text-center" style="width: 10%;">วันที่สร้าง</th>
+                        @endif
+                        <th class="text-center" style="width: 10%;">ความเห็นจากอาจารย์</th>
+                        <th class="text-center" style="width: 10%;">ความเห็นจากพี่เลี้ยง</th>
+                        <th class="text-center" style="width: 10%;">ลายเซ็นต์พี่เลี้ยง</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($logs as $log)
+                    <tr>
+                        <td>{{ \Carbon\Carbon::parse($log['log_date'])->format('d/m/Y') }}</td>
+                        <td>{{ $log['log_header'] }}</td>
+                        <td>{{ $log['log_detail'] }}</td>
+                        @if(auth()->user()->role === 'Teacher' || auth()->user()->role === 'Mentor')
+                        <td>{{ \Carbon\Carbon::parse($log['created_date'])->format('d/m/Y') }}</td>
+                        @endif
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm viewTeacherComments" data-bs-toggle="modal" data-bs-target="#teacherCommentsModal" data-comments="{{ json_encode($log['t_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
+                                <i class="bi bi-eye"></i> 
+                                @if(auth()->user()->role === 'Teacher')
+                                    เพิ่มความคิดเห็น
+                                @else
+                                    ดูความคิดเห็น
+                                @endif
+                            </button>
+                        </td>
+                        <td>
+                            <button type="button" class="btn btn-outline-primary btn-sm viewMentorComments" data-bs-toggle="modal" data-bs-target="#mentorCommentsModal" data-comments="{{ json_encode($log['m_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
+                                <i class="bi bi-eye"></i> 
+                                @if(auth()->user()->role === 'Mentor')
+                                    เพิ่มความคิดเห็น
+                                @else
+                                    ดูความคิดเห็น
+                                @endif
+                            </button>
+                        </td>
+                        <td>
+                            <form action="{{ route('mentor.signature.update') }}" method="POST" class="signature-form">
+                                @csrf
+                                <input type="hidden" name="student_id" value="{{ $studentId }}">
+                                <input type="hidden" name="log_date" value="{{ $log['log_date'] }}">
+                                <input type="hidden" name="signature" value="{{ ($log['signature'] ?? 'no') === 'yes' ? '0' : '1' }}">
+                                <input type="checkbox" class="form-check-input signature-checkbox" 
+                                    {{ ($log['signature'] ?? 'no') === 'yes' ? 'checked' : '' }} 
+                                    {{ auth()->user()->role === 'Mentor' ? '' : 'disabled' }} 
+                                    onchange="this.form.submit()">
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="7">ไม่มีข้อมูลบันทึก</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
+    @endif
 
     <!-- Add Log Modal -->
     <div class="modal fade" id="addLogModal" tabindex="-1" aria-labelledby="addLogModalLabel" aria-hidden="true">
@@ -299,7 +308,7 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', function () {
-        // Populate Teacher Comments Modal
+
         const teacherCommentsButtons = document.querySelectorAll('.viewTeacherComments');
         teacherCommentsButtons.forEach(button => {
             button.addEventListener('click', function () {
@@ -312,7 +321,6 @@
             });
         });
 
-        // Populate Mentor Comments Modal
         const mentorCommentsButtons = document.querySelectorAll('.viewMentorComments');
         mentorCommentsButtons.forEach(button => {
             button.addEventListener('click', function () {
@@ -339,8 +347,12 @@
             }
         });
 
-        // Trigger change event to populate fields for the first option
         editLogDate.dispatchEvent(new Event('change'));
+
+        $.fn.dataTable.ext.errMode = 'none'; 
+        $('#logEntries').DataTable({
+            responsive: true
+        });
     });
 </script>
 @endsection

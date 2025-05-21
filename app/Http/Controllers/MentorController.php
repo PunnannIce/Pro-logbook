@@ -21,7 +21,12 @@ class MentorController extends Controller
             return $loc->mentor_id1 == $user->id || $loc->mentor_id2 == $user->id || $loc->mentor_id3 == $user->id;
         });
 
-        return view('req', compact('locations', 'user', 'confirm', 'registeredLocation'));
+        // หาสถานที่ที่ mentor slots เต็ม (mentor_id1, mentor_id2, mentor_id3 ไม่เป็น null)
+        $fullLocations = $locations->filter(function ($loc) {
+            return $loc->mentor_id1 !== null && $loc->mentor_id2 !== null && $loc->mentor_id3 !== null;
+        })->pluck('id')->toArray();
+
+        return view('req', compact('locations', 'user', 'confirm', 'registeredLocation', 'fullLocations'));
     }
 
     public function store(Request $request)

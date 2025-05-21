@@ -53,6 +53,7 @@ Route::group(['prefix' => 'location'], function () {
     Route::get('index', [LocationController::class, 'index'])->name('location.index');
     Route::post('addstore', [LocationController::class, 'store'])->name('location.store');
     Route::post('/register-advisor', [LocationController::class, 'registerAdvisor'])->name('location.registerAdvisor');
+    Route::post('/cancel-advisor', [LocationController::class, 'cancelAdvisor'])->name('location.cancelAdvisor');
     Route::put('/update/{id}', [LocationController::class, 'update'])->name('location.update'); // Added route for updating locations
 });
 
@@ -74,7 +75,8 @@ Route::get('/create-student-images-folder', function () {
 Route::group(['prefix' => 'admin', 'middleware' => ['auth']], function () {
     Route::group(['prefix' => 'edit'], function () {
         Route::get('users', [AdminController::class, 'users'])->name('user.index');
-        Route::post('update-role', [AdminController::class, 'edit'])->name('users.updateRole');
+    Route::post('update-role', [AdminController::class, 'edit'])->name('users.updateRole');
+    Route::post('update-status', [AdminController::class, 'updateStatus'])->name('users.updateStatus');
     });
 });
 

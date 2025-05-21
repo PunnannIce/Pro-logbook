@@ -144,17 +144,17 @@
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeStudent')" 
-                                        href="{{ route('student.log') }}">{{ __('ตรวจสอบบันทึกประจำวัน') }}</a>
+                                        href="{{ route('student.log') }}">{{ __('บันทึกประจำวัน') }}</a>
                                 </li>
                             @endif
 
                             <!-- สำหรับ Mentor -->
                             @if (Auth::user()->role == 'Mentor')
-                                <li class="nav-item">
+                                {{-- <li class="nav-item">
                                     <a class="nav-link  @yield('activeStudent')" href=" ">{{ __('พี่เลี้ยง') }}</a>
-                                </li>
+                                </li> --}}
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('req') }}">{{ __('ลงทะเบียนพี่เลี้ยง') }}</a>
+                                    <a class="nav-link" href="{{ route('req') }}">{{ __('ลงทะเบียนสถานประกอบการ') }}</a>
                                 </li>
                                 <li class="nav-item">
                                     <a class="nav-link  @yield('activeMentorLog')"
