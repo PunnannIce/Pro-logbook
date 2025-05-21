@@ -10,49 +10,49 @@ class LocationController extends Controller
 {
 
 
-    public function index(Request $request)
-    {
-        $userId = auth()->user()->id;
-        $locations = Location::all();
-        
-        // รวม student_id1-4
-        $studentIds = $locations->flatMap(function ($loc) {
-            return [
-                $loc->student_id1,
-                $loc->student_id2,
-                $loc->student_id3,
-                $loc->student_id4,
-            ];
-        })->filter()->unique();
+        public function index(Request $request)
+        {
+            $userId = auth()->user()->id;
+            $locations = Location::orderBy('id', 'desc')->get();
+            
+            // รวม student_id1-4
+            $studentIds = $locations->flatMap(function ($loc) {
+                return [
+                    $loc->student_id1,
+                    $loc->student_id2,
+                    $loc->student_id3,
+                    $loc->student_id4,
+                ];
+            })->filter()->unique();
 
-        // รวม mentor_id1-2
-        $mentorIds = $locations->flatMap(function ($loc) {
-            return [
-                $loc->mentor_id1,
-                $loc->mentor_id2,
-            ];
-        })->filter()->unique();
+            // รวม mentor_id1-2
+            $mentorIds = $locations->flatMap(function ($loc) {
+                return [
+                    $loc->mentor_id1,
+                    $loc->mentor_id2,
+                ];
+            })->filter()->unique();
 
-        // รวม teacher_id
-        $teacherIds = $locations->flatMap(function ($loc) {
-            return [
-                $loc->teacher_id
-            ];
-        })->filter()->unique();
+            // รวม teacher_id
+            $teacherIds = $locations->flatMap(function ($loc) {
+                return [
+                    $loc->teacher_id
+                ];
+            })->filter()->unique();
 
-        // ดึง users ทั้งนักศึกษา, พี่เลี้ยง และที่ปรึกษา
-        $users = User::whereIn('student_id', $studentIds)
-            ->orWhereIn('id', $mentorIds)
-            ->orWhereIn('id', $teacherIds)
-            ->get();
+            // ดึง users ทั้งนักศึกษา, พี่เลี้ยง และที่ปรึกษา
+            $users = User::whereIn('student_id', $studentIds)
+                ->orWhereIn('id', $mentorIds)
+                ->orWhereIn('id', $teacherIds)
+                ->get();
 
-        // สร้าง 3 map แยก: student → keyBy student_id, mentor → keyBy id, teacher → keyBy id
-        $students = $users->whereNotNull('student_id')->keyBy('student_id');
-        $mentors = $users->keyBy('id');
-        $teachers = $users->keyBy('id');
+            // สร้าง 3 map แยก: student → keyBy student_id, mentor → keyBy id, teacher → keyBy id
+            $students = $users->whereNotNull('student_id')->keyBy('student_id');
+            $mentors = $users->keyBy('id');
+            $teachers = $users->keyBy('id');
 
-        return view('location.index', compact('locations', 'students', 'mentors', 'teachers', 'users'));
-    }
+            return view('location.index', compact('locations', 'students', 'mentors', 'teachers', 'users'));
+        }
 
     public function store(Request $request)
     {
@@ -77,7 +77,7 @@ class LocationController extends Controller
         ]);
 
         // แสดงผลข้อความเมื่อบันทึกสำเร็จ
-        return redirect()->back()->with('success', 'ข้อมูลสถานที่ฝึกงานบันทึกสำเร็จ');
+        return redirect()->back()->with('success', 'บันทึกสำเร็จ');
     }
 
     public function update(Request $request, $id)
@@ -101,7 +101,7 @@ class LocationController extends Controller
             'student_id4' => $request->student_id4,
         ]);
 
-        return redirect()->route('location.index')->with('success', 'แก้ไขสถานที่ฝึกงานสำเร็จ');
+        return redirect()->route('location.index')->with('success', 'แก้ไขรายการฝึกงานสำเร็จ');
     }
 
     public function registerAdvisor(Request $request)

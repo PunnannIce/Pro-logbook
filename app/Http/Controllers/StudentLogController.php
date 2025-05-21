@@ -160,8 +160,12 @@ class StudentLogController extends Controller
             $logIndex = array_search($request->log_date, array_column($logs, 'log_date'));
 
             if ($logIndex !== false) {
+                // Append mentor's name to the comment
+                $mentorName = auth()->user()->name;
+                $commentWithName = $request->mentor_comments . ' - ' . $mentorName;
+
                 // Replace the existing comment for the date
-                $logs[$logIndex]['m_comments'] = [$request->mentor_comments];
+                $logs[$logIndex]['m_comments'] = [$commentWithName];
                 $studentLog->log = $logs; // Reassign the modified array back to the model
                 $studentLog->save();
             }

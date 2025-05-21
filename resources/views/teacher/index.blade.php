@@ -30,7 +30,7 @@
                                 <td>{{ $student->location->term_year ?? '-' }}</td>
                                 <td>
                                     <a href="{{ url('student/log/' . $student->student_id) }}" class="btn btn-primary btn-sm">
-                                        ดูบันทึก
+                                        อ่านบันทึก
                                     </a>
                                 </td>
                             </tr>

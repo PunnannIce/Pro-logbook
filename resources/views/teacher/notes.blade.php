@@ -29,11 +29,19 @@
                         <td>{{ $student->location->term_year ?? '-' }}</td>
                         <td>
                             @if($student->student_id)
-                                <a 
-                                    href="{{ route('teacher.notes.edit', ['student_id' => $student->student_id]) }}" 
-                                    class="btn btn-primary btn-sm">
-                                    เพิ่มรายการนิเทศ
-                                </a>
+                                @if(in_array($student->student_id, $studentIdsWithNotes ?? []))
+                                    <a 
+                                        href="{{ route('teacher.notes.edit', ['student_id' => $student->student_id]) }}" 
+                                        class="btn btn-warning btn-sm">
+                                        แก้ไขรายการนิเทศ
+                                    </a>
+                                @else
+                                    <a 
+                                        href="{{ route('teacher.notes.edit', ['student_id' => $student->student_id]) }}" 
+                                        class="btn btn-primary btn-sm">
+                                        เพิ่มรายการนิเทศ
+                                    </a>
+                                @endif
                             @else
                                 <button 
                                     class="btn btn-danger btn-sm" disabled>
@@ -57,7 +65,8 @@
             responsive: true,
             language: {
                 url: 'https://cdn.datatables.net/plug-ins/1.13.4/i18n/th.json'
-            }
+            },
+            "order": [] // Disable default sorting
         });
     });
 </script>

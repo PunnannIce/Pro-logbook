@@ -119,14 +119,14 @@
             <table class="table table-bordered table-striped table-hover text-center align-middle" id="logEntries">
                 <thead>
                     <tr>
-                        <th class="text-center" style="width: 12%;">วันที่</th>
+                        <th class="text-center" style="width: 10%;">วันที่</th>
                         <th class="text-center" style="width: 18%;">หัวข้อ</th>
                         <th class="text-center" style="width: 30%;">รายละเอียด</th>
                         @if(auth()->user()->role === 'Teacher' || auth()->user()->role === 'Mentor')
                         <th class="text-center" style="width: 10%;">วันที่สร้าง</th>
                         @endif
-                        <th class="text-center" style="width: 10%;">ความเห็นจากอาจารย์</th>
-                        <th class="text-center" style="width: 10%;">ความเห็นจากพี่เลี้ยง</th>
+                        <th class="text-center" style="width: 11%;">ความเห็นจากอาจารย์</th>
+                        <th class="text-center" style="width: 11%;">ความเห็นจากพี่เลี้ยง</th>
                         <th class="text-center" style="width: 10%;">ลายเซ็นต์พี่เลี้ยง</th>
                     </tr>
                 </thead>
@@ -143,9 +143,13 @@
                             <button type="button" class="btn btn-outline-primary btn-sm viewTeacherComments" data-bs-toggle="modal" data-bs-target="#teacherCommentsModal" data-comments="{{ json_encode($log['t_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
                                 <i class="bi bi-eye"></i> 
                                 @if(auth()->user()->role === 'Teacher')
-                                    เพิ่มความคิดเห็น
+                                    @if(!empty($log['t_comments']))
+                                        แก้ไขความคิดเห็น
+                                    @else
+                                        เพิ่มความคิดเห็น
+                                    @endif
                                 @else
-                                    ดูความคิดเห็น
+                                    อ่านความคิดเห็น
                                 @endif
                             </button>
                         </td>
@@ -153,9 +157,13 @@
                             <button type="button" class="btn btn-outline-primary btn-sm viewMentorComments" data-bs-toggle="modal" data-bs-target="#mentorCommentsModal" data-comments="{{ json_encode($log['m_comments'] ?? []) }}" data-student-id="{{ $studentId }}" data-log-date="{{ $log['log_date'] }}">
                                 <i class="bi bi-eye"></i> 
                                 @if(auth()->user()->role === 'Mentor')
-                                    เพิ่มความคิดเห็น
+                                    @if(!empty($log['m_comments']))
+                                        แก้ไขความคิดเห็น      
+                                    @else
+                                        เพิ่มความคิดเห็น
+                                    @endif
                                 @else
-                                    ดูความคิดเห็น
+                                    อ่านความคิดเห็น
                                 @endif
                             </button>
                         </td>

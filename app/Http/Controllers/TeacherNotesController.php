@@ -64,7 +64,22 @@ class TeacherNotesController extends Controller
             return $student;
         });
 
-        return view('teacher.notes', ['students' => $studentsWithLocation]);
+        // Fetch student_ids that have mentoring notes with required fields
+        $studentIdsWithNotes = \App\Models\TeacherNote::whereIn('student_id', $studentIds)
+            ->whereIn('supervision_type', ['ออนไลน์', 'ออนไซต์'])
+            ->whereNotNull('note_detail')
+            ->pluck('student_id')
+            ->toArray();
+
+        // Sort students so those without mentoring notes come first
+        $studentsSorted = $studentsWithLocation->sortBy(function ($student) use ($studentIdsWithNotes) {
+            return in_array($student->student_id, $studentIdsWithNotes) ? 1 : 0;
+        })->values();
+
+        return view('teacher.notes', [
+            'students' => $studentsSorted,
+            'studentIdsWithNotes' => $studentIdsWithNotes,
+        ]);
     }
 
     public function store(Request $request)
@@ -119,6 +134,6 @@ class TeacherNotesController extends Controller
             ]);
         }
 
-        return back()->with('success', 'บันทึกนิเทศสำเร็จ');
+        return redirect()->route('teacher.notes')->with('success', 'บันทึกรายการนิเทศสำเร็จ');
     }
 }
